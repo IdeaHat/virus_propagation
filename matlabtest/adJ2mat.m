@@ -1,6 +1,5 @@
 function [ A ] = adJ2mat( Al )
-%ADJ2MAT Summary of this function goes here
-%   Detailed explanation goes here
+%ADJ2MAT Converts and Adjacency List to an Adjacency Matrix
 A = false(numel(Al));
 
 for (i=1:numel(Al))

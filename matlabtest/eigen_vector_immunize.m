@@ -1,6 +1,6 @@
 function [ Al ] = eigen_vector_immunize( Al,k,eigen_vec )
-%EIGEN_VECTOR_IMMNIZE Summary of this function goes here
-%   Detailed explanation goes here
+%EIGEN_VECTOR_IMMNIZE Immunizes a adjacency list based
+%  on the eigen values
 
 if nargin<3
     [~,eigen_vec]=eigs(adj2mat(Al),1);

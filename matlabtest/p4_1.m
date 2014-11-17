@@ -1,14 +1,14 @@
 clear all;
 close all;
-num_sims=50;
+num_sims=100;
 sim_iters=100;
 beta = [0.2,0.01];
 delta = [0.70,0.60];
 k1=200;
 
-file = '~/Downloads/static.network';
+file = 'D:/Users/Nathan/Downloads/static.network';
 
-[V,E,graph_size] = read_edge_list('~/Downloads/static.network');
+[V,E,graph_size] = read_edge_list(file);
 Al_base = edge_to_adjacency_list(E,V);
 A_base = adJ2mat(Al_base);
 base_count = numel(Al_base);
@@ -27,6 +27,8 @@ immunization_names = {...
     'None',...
     'A: Random', 'B: Highest Degree', 'C: Iterative Highest Degree',...
     'D: Eigen Values'};
+plotting_method=@plot;
+
 for (immval = 1:numel(immunization_methods))
     
     imm_res = table();
@@ -48,25 +50,36 @@ for (immval = 1:numel(immunization_methods))
         imm_res2.epidemic = imm_res2.effective_strength > 1;
 
         sweep = 0:0.01:1;
+        imm_res2.beta_threshold=1*delta(i)/max(lambda);
+        
         figure;
-        plot(sweep,max(lambda)*sweep./delta(i));
+        vals = max(lambda)*sweep./delta(i);
+        plotting_method(sweep,vals);        
         hold on;
-        plot([0,1],[1,1],'--');
-        title(sprintf('Effective strength vs gamma for delta_%d,\nImmunization: %s',i,imm_name));
-        xlabel('gamma (probability)');
+        plotting_method(sweep,ones(size(sweep)),'--','Color','black');
+        if (imm_res2.beta_threshold<=1)
+        plotting_method([imm_res2.beta_threshold,imm_res2.beta_threshold],[1,max(vals(~isinf(vals)))],'--','Color','black');
+        end
+        
+        title(sprintf('Effective strength vs Transmission for param_%d,\nImmunization: %s',i,imm_name));
+        xlabel('Transmission Probability)');
         ylabel('Effective Strength');
 
-        imm_re2.beta_threshold=1*delta(i)/max(lambda);
-
+        
+        imm_res2.delta_threshold = max(lambda)*beta(i);
         figure;
-        plot(sweep,max(lambda)*beta(i)./sweep);
+        vals = max(lambda)*beta(i)./sweep;
+        plotting_method(sweep,vals);
         hold on;
-        plot([0,1],[1,1],'--');
-        title(sprintf('Effective strength vs delta for gamma_%d,\nImmunization: %s',i,imm_name))
-        xlabel('delta (probability)');
+        plotting_method(sweep,ones(size(sweep)),'--','Color','black');
+        if (imm_res2.delta_threshold<=1)
+        plotting_method([imm_res2.delta_threshold,imm_res2.delta_threshold],[1,max(vals(~isinf(vals)))],'--','Color','black');
+        end
+        title(sprintf('Effective strength vs Healing for param_%d,\nImmunization: %s',i,imm_name))
+        xlabel('Healing Probability)');
         ylabel('Effective Strength');
 
-        imm_re2.delta_threshold = max(lambda)*beta(i);
+
         asum = zeros(100,1);
         for (j=1:num_sims)
          asum = asum+simulate_sim(Al,beta(i),delta(i),floor(numel(Al)/10),sim_iters);

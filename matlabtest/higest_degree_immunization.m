@@ -1,6 +1,6 @@
 function [ Al ] = higest_degree_immunization( Al,k )
-%HIGEST_DEGREE_IMMUNIZATION Summary of this function goes here
-%   Detailed explanation goes here
+%HIGEST_DEGREE_IMMUNIZATION Immunizes an adjacency list
+%  based on the highest degree
 
 [~,immune]=sort(cellfun(@(x) numel(x),Al),'descend');
 immune = immune(1:k);

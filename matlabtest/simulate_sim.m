@@ -1,6 +1,6 @@
 function [ infected_stats ] = simulate_sim( Al,beta,delta,start_count,steps )
-%SIMULATE_SIM Summary of this function goes here
-%   Detailed explanation goes here
+%SIMULATE_SIM Runs a simulation of a SIS infection in a system
+
 n = numel(Al);
 infected_stats = zeros(steps,1);
 infected_stats(1)=start_count;
